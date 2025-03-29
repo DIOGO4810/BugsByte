@@ -251,7 +251,7 @@ const SingularBasket = () => {
           <View style={styles.circlesContainer}>
             {
               basket.map( item => 
-                <View>
+                <View key={item.name}>
                   <Image source= {{uri: data[search_id(data,item.name)].image}} style={styles.circle}/> 
                 </View>
 
@@ -265,29 +265,34 @@ const SingularBasket = () => {
       {/* Retângulos em uma coluna, agora acima do quadrado expandido */}
       {!expandedCurrent && !expandedPredictor && (
         <View style={styles.rectanglesContainer}>
+             
           {filteredBaskets.map(item => (
-            <View style={styles.rectangle}>
-              {/* Círculo */}
-              <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
+           
+             <Link key={item.name} style={styles.rectangle} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
+              <View>
+                  <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
 
-              {/* Texto */}
+                  {/* Texto */}
 
-              <Text style={styles.rectText}>{item.name}</Text>
-              <Text style={styles.rectText}>{item.value}</Text>
-              
-               <Text style={styles.rectText}>{data[search_id(data,item.name)].price_change_percentage_24h}</Text> 
-              {/* Seta e Percentagem */}
-              <View style={styles.arrowContainer}>
-                <Ionicons
-                  name={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "arrow-up" : "arrow-down"}
-                  size={24}
-                  color={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red"}
-                />
-                <Text style={[styles.percentage, { color: data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
-                  {data[search_id(data,item.name)].price_change_percentage_24h}%
-                </Text>
+                  <Text style={styles.rectText}>{item.name}</Text>
+                  <Text style={styles.rectText}>{item.value}</Text>
+                  
+                  <Text style={styles.rectText}>{data[search_id(data,item.name)].price_change_percentage_24h}</Text> 
+                  {/* Seta e Percentagem */}
+                  <View style={styles.arrowContainer}>
+                    <Ionicons
+                      name={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "arrow-up" : "arrow-down"}
+                      size={24}
+                      color={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red"}
+                    />
+                    <Text style={[styles.percentage, { color: data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
+                      {data[search_id(data,item.name)].price_change_percentage_24h}%
+                    </Text>
+                  </View>
               </View>
-            </View>
+            </Link>
+             
+         
           ))}
         </View>
       )}
