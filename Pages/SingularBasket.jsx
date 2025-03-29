@@ -145,7 +145,7 @@ const SingularBasket = () => {
          {data && data.length > 0 && (
            <Link to="/baskets" style={styles.link}>
              {/* Substituindo o texto por um ícone */}
-             <Ionicons name="arrow-back" size={30} color="black" />
+             <Ionicons name="arrow-back" size={30} color="white"/>
            </Link>
          )}
          <View style={styles.header}>
@@ -164,7 +164,7 @@ const SingularBasket = () => {
               style={[ (!expandedCurrent)?
                 styles.square:
                 {
-                  backgroundColor: 'gray',
+                  backgroundColor: 'black',
                   width:screenWidth *0.9 ,
                   height:screenHeight*0.9,
                   alignItems:'center',
@@ -185,7 +185,7 @@ const SingularBasket = () => {
                   <TouchableOpacity onPress={closeCurrent} style={styles.closeButtonCurrentContainer} accessibilityLabel="Fechar">
                     <Icon name="close" size={24} color="#fff" />
                   </TouchableOpacity>
-                  <Text style={styles.graphText}>[ Gráfico Aqui ]</Text>
+                  {/*<Text style={styles.graphText}>[ Gráfico Aqui ]</Text>*/}
                   <View style={styles.statsContainer}>
                     <View style={styles.greenBox}><Text>Aumentaram</Text></View>
                     <View style={styles.redBox}><Text>Desceram</Text></View>
@@ -203,7 +203,7 @@ const SingularBasket = () => {
               style={[ (!expandedPredictor)? 
                 styles.square: 
                 {
-                  backgroundColor: 'gray',
+                  backgroundColor: 'black',
                   width: screenWidth *0.9 ,
                   height:screenHeight*0.9 ,
                   marginVertical: 10,
@@ -222,7 +222,7 @@ const SingularBasket = () => {
                    <TouchableOpacity onPress={closePredictor} style={styles.closeButtonPredictorContainer}>
                     <Icon name="close" size={24} color="#fff" />
                  </TouchableOpacity>
-                   <Text style={styles.graphText}>[ Gráfico Aqui ]</Text>
+                   {/*<Text style={styles.graphText}>[ Gráfico Aqui ]</Text>*/}
                    <View style={styles.statsContainer}>
                       <View style={styles.greenBox}>
                         <Text>Aumentaram</Text>
@@ -254,10 +254,8 @@ const SingularBasket = () => {
                 <View key={item.name}>
                   <Image source= {{uri: data[search_id(data,item.name)].image}} style={styles.circle}/> 
                 </View>
-
             )
           }
-             
           </View>
         </ScrollView>
       )}
@@ -277,7 +275,6 @@ const SingularBasket = () => {
                   <Text style={styles.rectText}>{item.name}</Text>
                   <Text style={styles.rectText}>{item.value}</Text>
                   
-                  <Text style={styles.rectText}>{data[search_id(data,item.name)].price_change_percentage_24h}</Text> 
                   {/* Seta e Percentagem */}
                   <View style={styles.arrowContainer}>
                     <Ionicons
@@ -302,18 +299,17 @@ const SingularBasket = () => {
 
 const styles = StyleSheet.create({
   appContainer: {
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     paddingVertical: 20,
     paddingHorizontal: 5,
   },
 
   header:{
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 
   title: {
-   
-    color: 'black',
+    color: 'white',
     marginBottom: 50,
     marginLeft:30,
     fontWeight: 'bold',
@@ -324,9 +320,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20, // Usa padding em vez de margin
-  
   },
-
   squaresContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -334,21 +328,18 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     position: 'relative',
   },
-
   square: {
     width: 150,
     height: 150,
     borderRadius: 20,
-    backgroundColor: 'gray',
+    backgroundColor: '#11181C',
     justifyContent: 'center',
-    alignItems: 'center',
-   
+    alignItems: 'center'
   },
   titlesquare:{
     color: 'white',
     fontSize: 25,
-    textAlign: 'center',
-    
+    textAlign: 'center'
   },
   graphText: {
     color: 'white',
@@ -385,9 +376,9 @@ const styles = StyleSheet.create({
   },
 
   statsContainer: {
-    marginVertical:10,
+    marginVertical:20,
     flexDirection: 'row',
-    gap: 20,
+    gap: 40,
   },
 
   greenBox: {
@@ -418,15 +409,14 @@ const styles = StyleSheet.create({
   noticias: {
     width: 70,
     height: 70,
-    
     backgroundColor: 'black',
-    marginHorizontal: 5,
-    
+    marginHorizontal: 5
   },
 
   circlesContainer: {
     flexDirection: 'row',
     gap: 10,
+    marginLeft: 23
   },
 
   circle: {
@@ -445,7 +435,7 @@ const styles = StyleSheet.create({
     width: 350,
     height: 60,
     marginLeft:20,
-    backgroundColor: 'black',
+    backgroundColor: '#11181C',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
@@ -471,6 +461,7 @@ const styles = StyleSheet.create({
   arrowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    color: 'white'
   },
 
   percentage: {
