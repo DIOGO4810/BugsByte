@@ -12,6 +12,8 @@ import {
 import { createArrayObj, totalget, teste, Api, search_id } from "../API.js";
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
 
+const baskets=[ {name:"Criptomoedas Populares", index:0}, {name: "Criptomoedas Emergentes e Estáveis",index:1}]
+
 const HomeScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
 
@@ -85,21 +87,19 @@ const HomeScreen = () => {
         </View>
 
         <ScrollView contentContainerStyle={styles.mainContent}>
-          {data.map((item) => (
+          {baskets.map((item) => (
             <View key={item.id} style={styles.row}>
-              <Link style={styles.card}>
+              <Link style={styles.card} to={{
+                pathname: `/basketPage/${item.name}/${item.index}`,
+                              }}>
               <View style={styles.row}>
-                <Image source={{ uri: item.image }} style={styles.cardImage} />
-
                 
 
+              
                 <Text style={styles.cardTitle}>
-                  {item.name} ({item.symbol.toUpperCase()})
+                  {item.name}
                 </Text>
 
-                <Text style={styles.cardAmount}>
-                  ${item.current_price.toFixed(2)}
-                </Text>
                 
 
               </View>
