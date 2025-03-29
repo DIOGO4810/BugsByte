@@ -3,7 +3,7 @@ const apiUrl= 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur'
 const info = fetch(apiUrl);
 
 export async function totalget() {
-    const apiUrl= 'https://api.coingecko.com/ºa.pi/v3/coins/markets?vs_currency=eur'
+    const apiUrl= 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur'
     return fetch(apiUrl);
 }
 
