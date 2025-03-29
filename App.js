@@ -11,8 +11,10 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <Routes>  {/* Usando Routes ao invés de Switch */}
           <Route path="/" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
-          <Route path="/assets" element={<AssetsScreen />} /> {/* Defina uma rota para Assets */}
-          <Route path="/singularasset" element={<SingularAsset />} /> 
+
+          <Route path="/baskets" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
+
+          <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}
 
         </Routes>
       </SafeAreaView>

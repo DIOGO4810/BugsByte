@@ -1,8 +1,14 @@
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 import { createArrayObj, totalget, teste, Api, search_id } from '../API.js';
+import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
+
+
 
 const HomeScreen = () => {
+  const location = useLocation(); // Usando o hook para obter a localização atual
+
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -47,123 +53,119 @@ const HomeScreen = () => {
   }
 
 
+  // Função para verificar se o link está ativo
+  const isActive = (path) => location.pathname === path;
 
 
+  const items = [
+    { id: 1, title: "Sad" },
+    { id: 2, title: "Lucro" },
+    { id: 3, title: "Última Compra" },
+  ];
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
-
-        {/* Footer no topo com dois botões */}
+        {/* Footer com botões */}
         <View style={styles.topFooter}>
-          <TouchableOpacity style={styles.footerButton}>
+          <Link
+            to="/baskets"
+            style={[
+              styles.footerButton,
+              isActive("/baskets") && styles.activeLink,
+            ]}
+          >
             <Text style={styles.footerButtonText}>Baskets</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.footerButton}>
+          </Link>
+          <Link
+            to="/assets"
+            style={[
+              styles.footerButton,
+              isActive("/assets") && styles.activeLink,
+            ]}
+          >
             <Text style={styles.footerButtonText}>Assets</Text>
-          </TouchableOpacity>
+          </Link>
         </View>
 
-        {/* Conteúdo principal com ROWS */}
         <ScrollView contentContainerStyle={styles.mainContent}>
-          <View style={styles.row}>
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Saldo</Text>
-            </View>
 
-          </View>
-          <View style={styles.row}>
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Lucro</Text>
-            </View>
-
-          </View>
-
-          <Text style={styles.title}>Dados Obtidos:</Text>
-          <Text style={styles.cardTitle}>{data[search_id(data, 'ethereum')].current_price}</Text>
-          <Text>{data[0].body}</Text>
-          <Text style={styles.title}>Dados Obtidos:</Text>
-          {data && data.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Text style={styles.cardTitle}>{item.id}</Text>
-              <Text>{item.price_change_24h.toFixed(2)} %</Text>
-              <Text>{item.current_price.toFixed(3)} </Text>
+          {items.map((item) => (
+            <View key={item.id} style={styles.row}>
+              <Link to={item.route} key={item.id} style={styles.card}>
+                <Text style={styles.cardTitle}>{item.title}</Text>
+              </Link>
             </View>
           ))}
 
-
-
-          <View style={styles.row}>
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>Última Compra</Text>
-            </View>
-
-          </View>
-
         </ScrollView>
-
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  activeLink: {
+    backgroundColor: "#208020", // Cor que você deseja para o link ativo
+  },
   safeContainer: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
   },
   container: {
     flex: 1,
   },
   topFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: '#202020',
+    backgroundColor: "#202020",
   },
   footerButton: {
+
     width: '45%',
+
     marginHorizontal: 5,
-    backgroundColor: '#202020',
+    backgroundColor: "#202020",
     paddingVertical: 12,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   footerButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
   },
   mainContent: {
     paddingHorizontal: 20,
     paddingTop: 20,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 15,
   },
   card: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 5,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
   cardTitle: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     marginBottom: 5,
   },
   cardAmount: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#0064f9',
+    fontWeight: "bold",
+    color: "#0064f9",
   },
 });
 
