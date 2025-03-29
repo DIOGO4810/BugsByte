@@ -5,9 +5,13 @@ import { NativeRouter, Route, Routes } from 'react-router-native'; // Alterei pa
 import HomeScreen from './Pages/HomeScreen'; 
 import AssetsScreen from './Pages/AssetsScreen';
 import SingularAsset from './Pages/SingularAsset';
+import GeminiCall from './AI_api';
 
 
 const App=()=> {
+  const response = GeminiCall();
+  console.log(response);
+  
   return (
     <NativeRouter> {/* Usando NativeRouter ao invés de Router */}
       <SafeAreaView style={styles.container}>
