@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     alignItems: 'center',
+    marginBottom: 50
   },
   headerContainer: {
     width: '90%',
@@ -122,17 +123,18 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   },
   coinText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'white',
-    marginRight: 70,
+    color: 'white'
   },
   containerGrafico: {
     width: '90%',
     height: 200,
-    backgroundColor: '#333',
+    backgroundColor: '#11181C',
     borderRadius: 10,
     marginBottom: 20,
   },
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
   },
   caixaPrevisao: {
     marginTop: 20,
-    backgroundColor: '#555',
+    backgroundColor: '#11181C',
     paddingVertical: 100,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   caixaNoticias: {
-    backgroundColor: '#555',
+    backgroundColor: '#11181C',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
@@ -190,11 +192,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   currentCoinPriceText: {
-    alignItems: 'flex-end',
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
   },
+
   loadingText: {
     color: 'white',
     textAlign: 'center',
