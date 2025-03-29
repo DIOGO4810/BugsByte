@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-native';
-import { View, Text, StyleSheet, ScrollView,Image} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Link } from 'react-router-native';
 import { Api } from '../API.js';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
+import GeminiCall from '../AI_api.js';
 
 const SingularAsset = () => {
   const noticias = [
@@ -14,11 +15,12 @@ const SingularAsset = () => {
     { id: '5', text: 'Notícia 5 aqui' },
   ];
 
-  const { name,price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
+  const { name, price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
 
   console.log(name);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [previsaoGemini, setPrevisaoGemini] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -27,15 +29,19 @@ const SingularAsset = () => {
         const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
         setData(result.slice(0, 12));
         setLoading(false);
+
+        // Chama a função GeminiCall e armazena a previsão no estado
+        const response = await GeminiCall(name);
+        setPrevisaoGemini(response);  // Atualiza o estado com a resposta da API
       } catch (err) {
         setError(err);
         setLoading(false);
       }
-    };  
+    };
 
     fetchDataFromAPI();
-    console.log("Nome do ativo: " + name); // Agora imprime o nome correto
-  }, [name]); // Recarrega sempre que o nome mudar
+    console.log("Nome do ativo: " + name);
+  }, [name]); 
 
   if (loading) {
     return <Text style={styles.loadingText}>Carregando...</Text>;
@@ -78,8 +84,9 @@ const SingularAsset = () => {
           </View>
         </View>
 
+        {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
-          <Text style={styles.textoPrevisao}>Previsão aqui</Text>
+          <Text style={styles.textoPrevisao}>{previsaoGemini}</Text>
         </View>
 
         <View style={styles.noticiasContainer}>
@@ -118,13 +125,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  coinIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 16,
-    backgroundColor: 'purple',
-    marginRight: 10,
   },
   coinText: {
     fontSize: 24,
