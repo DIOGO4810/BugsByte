@@ -29,8 +29,8 @@ const baskets=[
                  {name:'cardano', value: 1.2},
                  {name: 'chainlink', value: 0.4},
                  {name:'avalanche-2', value: 0.4},
-                 {name:'sui' , value: 0.4},
-                 {name: 'liteCoin' , value: 0.3},
+                 {name:'sui', value: 0.4},
+                 {name: 'litecoin' , value: 0.3},
                  {name: 'polkadot', value: 0.3},
   
             ]]
