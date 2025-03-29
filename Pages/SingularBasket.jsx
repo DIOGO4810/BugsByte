@@ -1,24 +1,93 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions , Image} from "react-native";
 import { Ionicons } from '@expo/vector-icons'; // Ícones para as setas
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Link, useParams} from "react-router-native"; 
+import { Api, search_id } from '../API.js';
 
-const data = [
-  { text: "Bitcoin", change: 5.2, percentage:'10%' },
-  { text: "Ethereum", change: -3.8 , percentage:'10%'  },
-  { text: "Cardano", change: 2.1, percentage:'10%'  },
-  { text: "Cardano", change: -2.1, percentage:'10%'  },
-  { text: "Cardano", change: 2.1, percentage:'10%'  },
-  { text: "Cardano", change: 2.1, percentage:'10%'  },
-];
+
+
+const baskets=[
+  [    {name: 'bitcoin', value: 50.96},
+                {name:'ethereum', value: 7.00},
+                {name:'ripple', value: 9.08},
+                {name:'stellar', value: 1.31},
+                {name:'uniswap', value: 0.72},
+                {name:'tron', value: 1.76},
+                {name:'litecoin', value: 1.58},
+                {name: 'binancecoin', value: 7.24},
+                {name:'solana', value: 5.07},
+                {name: 'dogecoin', value: 2.02},
+                {name: 'cardano' , value: 1.86},
+                {name:'tron', value: 50.96},
+              ],
+  
+          [      {name:'bitcoin', value: 77.4},
+                 {name: 'ethereum' , value: 10.7},
+                 {name:'ripple', value: 6.0},
+                 {name:'solana', value: 2.9},
+                 {name:'cardano', value: 1.2},
+                 {name: 'chainlink', value: 0.4},
+                 {name:'avalanche-2', value: 0.4},
+                 {name:'sui' , value: 0.4},
+                 {name: 'liteCoin' , value: 0.3},
+                 {name: 'polkadot', value: 0.3},
+  
+            ]]
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const SingularBasket = () => {
-  const [expandedCurrent, setExpandedCurrent] = useState(false);
-  const [expandedPredictor, setExpandedPredictor] = useState(false);
-  const animatedSizeCurrent = useState(new Animated.Value(150))[0];
-  const animatedSizePredictor = useState(new Animated.Value(150))[0];
+
+  const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const {name,index } = useParams();
+    const basket=baskets[index];
+    const filteredBaskets = (
+      basket.filter(item => item.value > 5.5)
+    );
+    const [expandedCurrent, setExpandedCurrent] = useState(false);
+    const [expandedPredictor, setExpandedPredictor] = useState(false);
+    const animatedSizeCurrent = useState(new Animated.Value(150))[0];
+    const animatedSizePredictor = useState(new Animated.Value(150))[0];
+  
+  
+    // Usando useEffect para buscar dados assim que o componente for montado
+    useEffect(() => {
+      const fetchDataFromAPI = async () => {
+        try {
+          const result = await Api(
+            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+          );
+          setData(result);
+          setLoading(false); // Atualizando o estado de carregamento
+        } catch (err) {
+          setError(err);
+          setLoading(false);
+        }
+      };
+  
+      fetchDataFromAPI();
+      console.log("Rodou useEffect");
+    }, []); // O array vazio significa que isso será executado apenas uma vez
+  
+   if (loading) {
+       return <Text style={styles.loadingText}>Carregando...</Text>;
+     }
+  
+    if (error) {
+      console.log(error);
+      return (
+        <View style={styles.centered}>
+          <Text>Erro: {error.message}</Text>
+        </View>
+      );
+    }
+  
+
+ 
 
   const toggleExpandCurrent = () => {
     if (!expandedCurrent) {
@@ -66,10 +135,25 @@ const SingularBasket = () => {
 
     setExpandedPredictor(false);  // Marca como fechado
   };
-
+  
+  console.log("jelo" + data[0].image);
   return (
     <ScrollView style={styles.appContainer}>
-      {!expandedCurrent && !expandedPredictor && <Text style={styles.title}>Basket 1:</Text>}
+     
+      {!expandedCurrent && !expandedPredictor && 
+         <View style={styles.headerContainer}>
+         {data && data.length > 0 && (
+           <Link to="/baskets" style={styles.link}>
+             {/* Substituindo o texto por um ícone */}
+             <Ionicons name="arrow-back" size={30} color="black" />
+           </Link>
+         )}
+         <View style={styles.header}>
+           <Text style={[styles.title,{ fontSize: 40}]}>{name}</Text> {/* Exibe o nome do ativo aqui */}
+         </View>
+        </View>
+
+      }
 
 
       <View style={(!expandedCurrent && !expandedPredictor) ? styles.squaresContainer : {width:"100%", height:"100%"}}>
@@ -149,9 +233,7 @@ const SingularBasket = () => {
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
                     <View style={styles.noticiasContainer}>
-                      {Array(17).fill().map((_, index) => (
-                        <View key={index} style={styles.noticias}></View>
-                      ))}
+                    
                     
                      </View>
                    </ScrollView>
@@ -167,11 +249,15 @@ const SingularBasket = () => {
       {!expandedCurrent && !expandedPredictor && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
           <View style={styles.circlesContainer}>
-            {Array(10).fill().map((_, index) => (
-              <View key={index} style={styles.circle}>
+            {
+              basket.map( item => 
+                <View>
+                  <Image source= {{uri: data[search_id(data,item.name)].image}} style={styles.circle}/> 
+                </View>
 
-              </View>
-            ))}
+            )
+          }
+             
           </View>
         </ScrollView>
       )}
@@ -179,23 +265,26 @@ const SingularBasket = () => {
       {/* Retângulos em uma coluna, agora acima do quadrado expandido */}
       {!expandedCurrent && !expandedPredictor && (
         <View style={styles.rectanglesContainer}>
-          {data.map((item, index) => (
-            <View key={index} style={styles.rectangle}>
+          {filteredBaskets.map(item => (
+            <View style={styles.rectangle}>
               {/* Círculo */}
-              <View style={styles.rectCircle}></View>
+              <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
 
               {/* Texto */}
-              <Text style={styles.rectText}>{item.text}</Text>
-              <Text style={styles.rectText}>{item.percentage}</Text>
+
+              <Text style={styles.rectText}>{item.name}</Text>
+              <Text style={styles.rectText}>{item.value}</Text>
+              
+               <Text style={styles.rectText}>{data[search_id(data,item.name)].price_change_percentage_24h}</Text> 
               {/* Seta e Percentagem */}
               <View style={styles.arrowContainer}>
                 <Ionicons
-                  name={item.change >= 0 ? "arrow-up" : "arrow-down"}
+                  name={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "arrow-up" : "arrow-down"}
                   size={24}
-                  color={item.change >= 0 ? "green" : "red"}
+                  color={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red"}
                 />
-                <Text style={[styles.percentage, { color: item.change >= 0 ? "green" : "red" }]}>
-                  {item.change}%
+                <Text style={[styles.percentage, { color: data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
+                  {data[search_id(data,item.name)].price_change_percentage_24h}%
                 </Text>
               </View>
             </View>
@@ -209,12 +298,16 @@ const SingularBasket = () => {
 const styles = StyleSheet.create({
   appContainer: {
     backgroundColor: 'white',
-    paddingVertical: 70,
+    paddingVertical: 20,
     paddingHorizontal: 5,
   },
 
+  header:{
+    flexDirection: 'row',
+  },
+
   title: {
-    fontSize: 40,
+   
     color: 'black',
     marginBottom: 50,
     marginLeft:30,
@@ -334,7 +427,6 @@ const styles = StyleSheet.create({
   circle: {
     width: 50,
     height: 50,
-    backgroundColor: 'gray',
     borderRadius: 25,
   },
 
@@ -353,6 +445,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 20, 
+    gap:20,
     borderRadius: 8,
   },
 

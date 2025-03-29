@@ -5,7 +5,7 @@ import { NativeRouter, Route, Routes } from 'react-router-native'; // Alterei pa
 import HomeScreen from './Pages/HomeScreen'; 
 import AssetsScreen from './Pages/AssetsScreen';
 import SingularAsset from './Pages/SingularAsset';
-
+import SingularBasket from './Pages/SingularBasket';
 
 const App=()=> {
   return (
@@ -15,6 +15,8 @@ const App=()=> {
           <Route path="/" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
 
           <Route path="/baskets" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
+
+          <Route path="/basketPage/:name/:index" element={<SingularBasket />} /> {/* Defina uma rota para Assets */}
 
           <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}
 
