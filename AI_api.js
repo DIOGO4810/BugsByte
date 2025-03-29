@@ -1,17 +1,14 @@
 
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenerativeAI({apiKey:'AIzaSyBkPAD2F1Oq7HagALUomC_pRZmAjAitABU'});
+// const ai = new GoogleGenAI({apiKey:});
 
 async function main() {
-
-    const prompt = "Explain how you work";
-
-
-    const model = ai. getGenerativeModel({model: "gemini-2.0-flash",});
-    const response = await model.generateContent(prompt);
-
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: "Explain how AI works",
+  });
   console.log(response.text);
 }
 

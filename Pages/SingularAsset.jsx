@@ -1,218 +1,219 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import {Api, search_id } from '../API.js';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-native';
+import { View, Text, StyleSheet, ScrollView,Image} from 'react-native';
+import { Link } from 'react-router-native';
+import { Api } from '../API.js';
+import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
 
 const SingularAsset = () => {
-//const data = [18, 26, 24, 36, 37];
-const noticias = [
-{ id: '1', text: 'Notícia 1 aqui' },
-{ id: '2', text: 'Notícia 2 aqui' },
-{ id: '3', text: 'Notícia 3 aqui' },
-{ id: '4', text: 'Notícia 4 aqui' },
-{ id: '5', text: 'Notícia 5 aqui' },
-];
+  const noticias = [
+    { id: '1', text: 'Notícia 1 aqui' },
+    { id: '2', text: 'Notícia 2 aqui' },
+    { id: '3', text: 'Notícia 3 aqui' },
+    { id: '4', text: 'Notícia 4 aqui' },
+    { id: '5', text: 'Notícia 5 aqui' },
+  ];
 
+  const { name,price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
 
-
+  console.log(name);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Usando useEffect para buscar dados assim que o componente for montado
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
         const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
         setData(result.slice(0, 12));
-        setLoading(false);  // Atualizando o estado de carregamento
+        setLoading(false);
       } catch (err) {
         setError(err);
         setLoading(false);
       }
-    };
-
+    };  
 
     fetchDataFromAPI();
-  }, []);
+    console.log("Nome do ativo: " + name); // Agora imprime o nome correto
+  }, [name]); // Recarrega sempre que o nome mudar
 
-  const aux = data[search_id(data,'bitcoin')];
+  if (loading) {
+    return <Text style={styles.loadingText}>Carregando...</Text>;
+  }
 
-return (
-<ScrollView style={styles.scrollView}>
-    <View style={styles.container}>
+  if (error) {
+    return <Text style={styles.errorText}>Erro: {error.message}</Text>;
+  }
+
+  if (!data || data.length === 0) {
+    return <Text style={styles.errorText}>Nenhum dado encontrado</Text>;
+  }
+
+  return (
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.container}>
         <View style={styles.headerContainer}>
-            <View style={styles.header}>
-                <View style={styles.coinIcon}/>
-                <Text style={styles.coinText}>aux.id</Text>
-                <Text style={styles.currentCoinPriceText}>aux.current_price</Text>
-            </View>
+          {data && data.length > 0 && (
+            <Link to="/baskets" style={styles.link}>
+              {/* Substituindo o texto por um ícone */}
+              <Ionicons name="arrow-back" size={30} color="black" />
+            </Link>
+          )}
+          <View style={styles.header}>
+            <Text style={styles.coinText}>{name}</Text> {/* Exibe o nome do ativo aqui */}
+            <Text style={styles.currentCoinPriceText}>{price}€ </Text>
+          </View>
         </View>
 
-        {/*Gráfico aqui*/}
         <View style={styles.containerGrafico}>
-            {/* Placeholder for the chart */}
-            <View style={styles.yAxisLabels}>
-                {[0, 10, 20, 30, 40, 50].map((value) => (
-                    <Text key={value} style={styles.yAxisLabelText}>
-                        {value}
-                    </Text>
-                ))}
-            </View>
-            <View>
-                <Text style={styles.textoPrevisao}>Gráfico aqui</Text>
-            </View>
-            {/* <View style={styles.xAxisLabels}>
-                {[0, 10, 20, 30, 40, 50].map((value) => (
-                    <Text key={value} style={styles.xAxisLabelText}>
-                        {value}
-                    </Text>
-                ))}
-            </View> */}
-            {/*LineChart aqui eventualmente*/}
-        </View>
-        
-        {/*Container da previsão*/}
-        <View style={styles.caixaPrevisao}>
-            <Text style={styles.textoPrevisao}>Previsão aqui</Text>
+          <View style={styles.yAxisLabels}>
+            {[0, 10, 20, 30, 40, 50].map((value) => (
+              <Text key={value} style={styles.yAxisLabelText}>
+                {value}
+              </Text>
+            ))}
+          </View>
+          <View>
+            <Text style={styles.textoPrevisao}>Gráfico aqui</Text>
+          </View>
         </View>
 
-        {/*Container das notícias com Scroll horizontal*/}
-        <View style={styles.noticiasContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.noticiasContentContainer} nestedScrollEnabled={true}>
-                {noticias.map((noticia) => (
-                    <View key={noticia.id} style={styles.caixaNoticias}>
-                        <Text style={styles.textoNoticias}>{noticia.text}</Text>
-                    </View>
-                ))}
-            </ScrollView>
+        <View style={styles.caixaPrevisao}>
+          <Text style={styles.textoPrevisao}>Previsão aqui</Text>
         </View>
-    </View>
-</ScrollView>);};
+
+        <View style={styles.noticiasContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.noticiasContentContainer} nestedScrollEnabled={true}>
+            {noticias.map((noticia) => (
+              <View key={noticia.id} style={styles.caixaNoticias}>
+                <Text style={styles.textoNoticias}>{noticia.text}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
-    scrollView: {
-        flex: 1,
-        backgroundColor: 'black',
-    },
-    //Container geral da página
-    container: {
-        flex: 1,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-    },
-    //Container do header
-    headerContainer: {
-        width: '90%',
-        alignItems: 'flex-start',
-        marginTop: 55,
-        marginBottom: 23,
-    },
-    //Mexe com a parte do icon/logo da moeda e o nome
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    //Mexe com o círculozinho/icon da moeda
-    coinIcon: {
-        width: 40,
-        height: 40,
-        borderRadius: 16,
-        backgroundColor: 'purple',
-        marginRight: 10
-    },
-    //Mexe com o texto
-    coinText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: 'white',
-        marginRight: 70
-    },
-    //Mexe com o container do gráfico
-    containerGrafico: {
-        width: '90%',
-        height: 200,
-        backgroundColor: '#333',
-        borderRadius: 10,
-        marginBottom: 20,
-    },
-    //Mexe com cenas no eixo x do gráfico - não está a ser usado tho
-    xAxisLabels: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingBottom: 5,
-    },
-    //Mexe com o texto no eixo x do gráfico - não está a ser usado tho
-    xAxisLabelText: {
-        fontSize: 20,
-        color: '#666',
-    },
-    //Mexe com cenas no eixo y do gráfico
-    yAxisLabels: {
-        position: 'absolute',
-        left: -5,
-        top: 0,
-        bottom: 0,
-        justifyContent: 'space-between',
-        paddingVertical: 15,
-    },
-    //Mexe com o texto no eixo y do gráfico
-    yAxisLabelText: {
-        fontSize: 12,
-        color: 'white',
-        textAlign: 'right',
-        width: 33,
-    },
-    //Caixa da previsão
-    caixaPrevisao: {
-        marginTop: 20,
-        backgroundColor: '#555',
-        paddingVertical: 100,
-        paddingHorizontal: 20,
-        borderRadius: 10,
-        width: '90%',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    //Texto da caixa de previsão
-    textoPrevisao: {
-        fontSize: 19,
-        color: 'white',
-        textAlign: 'center',
-    },
-    // Container para o ScrollView Horizontal das notícias
-    noticiasContainer: {
-        marginTop: 10,
-        width: '90%',
-        height: '20%'
-    },
-    //ScrollView horizontal para as notícias
-    noticiasContentContainer: {
-        flexDirection: 'row',
-        paddingVertical: 10,
-    },
-    //Caixa de notícias (agora dentro do ScrollView horizontal)
-    caixaNoticias: {
-        backgroundColor: '#555',
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        borderRadius: 10,
-        minWidth: 220,
-        minHeight: 100,
-        alignItems: 'center',
-        marginRight: 15,
-    },
-    //Texto da caixa de notícias
-    textoNoticias: {
-        fontSize: 19,
-        color: 'white',
-        textAlign: 'center',
-    },
-    currentCoinPriceText: {
-        alignItems: 'flex-end',
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-    }
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  headerContainer: {
+    width: '90%',
+    alignItems: 'flex-start',
+    marginTop: 10,
+    marginBottom: 23,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  coinIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 16,
+    backgroundColor: 'purple',
+    marginRight: 10,
+  },
+  coinText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginRight: 70,
+  },
+  containerGrafico: {
+    width: '90%',
+    height: 200,
+    backgroundColor: '#333',
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  yAxisLabels: {
+    position: 'absolute',
+    left: -5,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+  },
+  yAxisLabelText: {
+    fontSize: 12,
+    color: 'white',
+    textAlign: 'right',
+    width: 33,
+  },
+  caixaPrevisao: {
+    marginTop: 20,
+    backgroundColor: '#555',
+    paddingVertical: 100,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    width: '90%',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  textoPrevisao: {
+    fontSize: 19,
+    color: 'white',
+    textAlign: 'center',
+  },
+  noticiasContainer: {
+    marginTop: 10,
+    width: '90%',
+    height: '20%',
+  },
+  noticiasContentContainer: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
+  caixaNoticias: {
+    backgroundColor: '#555',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    minWidth: 220,
+    minHeight: 100,
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  textoNoticias: {
+    fontSize: 19,
+    color: 'white',
+    textAlign: 'center',
+  },
+  currentCoinPriceText: {
+    alignItems: 'flex-end',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  loadingText: {
+    color: 'white',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  link: {
+    marginVertical: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default SingularAsset;
