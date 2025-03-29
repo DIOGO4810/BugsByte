@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {Api, search_id } from '../API.js';
 
 const SingularAsset = () => {
-const data = [18, 26, 24, 36, 37];
+//const data = [18, 26, 24, 36, 37];
 const noticias = [
 { id: '1', text: 'Notícia 1 aqui' },
 { id: '2', text: 'Notícia 2 aqui' },
@@ -11,14 +12,39 @@ const noticias = [
 { id: '5', text: 'Notícia 5 aqui' },
 ];
 
+
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Usando useEffect para buscar dados assim que o componente for montado
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
+        setData(result.slice(0, 12));
+        setLoading(false);  // Atualizando o estado de carregamento
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+
+    fetchDataFromAPI();
+  }, []);
+
+  const aux = data[search_id(data,'bitcoin')];
+
 return (
 <ScrollView style={styles.scrollView}>
     <View style={styles.container}>
         <View style={styles.headerContainer}>
             <View style={styles.header}>
                 <View style={styles.coinIcon}/>
-                <Text style={styles.coinText}>Bitcoin</Text>
-                <Text style={styles.currentCoinPriceText}>99.999,99€</Text>
+                <Text style={styles.coinText}>aux.id</Text>
+                <Text style={styles.currentCoinPriceText}>aux.current_price</Text>
             </View>
         </View>
 
