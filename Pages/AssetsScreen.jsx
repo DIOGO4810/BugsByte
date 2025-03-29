@@ -1,24 +1,66 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, SafeAreaView} from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+  Image,
+} from "react-native";
+import { createArrayObj, totalget, teste, Api, search_id } from "../API.js";
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
 
 const AssetsScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
 
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Usando useEffect para buscar dados assim que o componente for montado
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const result = await Api(
+          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+        );
+        setData(result.slice(0, 10));
+        setLoading(false); // Atualizando o estado de carregamento
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromAPI();
+    console.log("Rodou useEffect");
+  }, []); // O array vazio significa que isso será executado apenas uma vez
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Carregando...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <View style={styles.centered}>
+        <Text>Erro: {error.message}</Text>
+      </View>
+    );
+  }
+
   // Função para verificar se o link está ativo
   const isActive = (path) => location.pathname === path;
-
-
-  const items = [
-    { id: 1, title: 'Sad' },
-    { id: 2, title: 'Lucro' },
-    { id: 3, title: 'Última Compra' },
-  ];
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
-        {/* Footer no topo com dois botões */}
-
         {/* Footer com botões */}
         <View style={styles.topFooter}>
           <Link
@@ -41,21 +83,33 @@ const AssetsScreen = () => {
           </Link>
         </View>
 
-        {/* Conteúdo principal com ROWS */}
+        <ScrollView contentContainerStyle={styles.mainContent}>
+          {data.map((item) => (
+            <View key={item.id} style={styles.row}>
+              <Link
+                style={styles.card}
+                to={{
+                  pathname: `/coinPage/${item.name}/${item.current_price}`,
+                }}
+              >
+                <View style={styles.row}>
+                  <Image
+                    source={{ uri: item.image }}
+                    style={styles.cardImage}
+                  />
 
+                  <Text style={styles.cardTitle}>
+                    {item.name} ({item.symbol.toUpperCase()})
+                  </Text>
 
-
-    <ScrollView contentContainerStyle={styles.mainContent}>
-      {items.map(item => (
-        <View key={item.id} style={styles.row}>
-          <Link to={item.route} key={item.id} style={styles.card}>
-              <Text style={styles.cardTitle}>{item.title}</Text>
-          </Link>
-        </View>
-      ))}
-    </ScrollView>
-
-
+                  <Text style={styles.cardAmount}>
+                    ${item.current_price.toFixed(2)}
+                  </Text>
+                </View>
+              </Link>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -63,7 +117,7 @@ const AssetsScreen = () => {
 
 const styles = StyleSheet.create({
   activeLink: {
-    backgroundColor: '#208020', // Cor que você deseja para o link ativo
+    backgroundColor: "#208020", // Cor que você deseja para o link ativo
   },
   safeContainer: {
     flex: 1,
@@ -98,8 +152,9 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: 15,
+    justifyContent: "center", // Centraliza no eixo vertical
+    alignItems: "center",
   },
   card: {
     flex: 1,
@@ -114,14 +169,21 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: 22,
     color: "#333",
     marginBottom: 5,
+    marginHorizontal: 20,
   },
   cardAmount: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#0064f9",
+    marginBottom: 10,
+  },
+  cardImage: {
+    width: 50,
+    height: 50,
+    marginTop: 10,
   },
 });
 
