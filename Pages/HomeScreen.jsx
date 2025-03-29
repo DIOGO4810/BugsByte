@@ -94,9 +94,6 @@ const HomeScreen = () => {
                 pathname: `/basketPage/${item.name}/${item.index}`,
                               }}>
               <View style={styles.row}>
-                
-
-              
                 <Text style={styles.cardTitle}>
                   {item.name}
                 </Text>

@@ -19,7 +19,7 @@ const baskets=[
                 {name:'solana', value: 5.07},
                 {name: 'dogecoin', value: 2.02},
                 {name: 'cardano' , value: 1.86},
-                {name:'tron', value: 50.96},
+                {name:'tron', value: 6.27},
               ],
   
           [      {name:'bitcoin', value: 77.4},
@@ -266,14 +266,14 @@ const SingularBasket = () => {
              
           {filteredBaskets.map(item => (
            
-             <Link key={item.name} style={styles.rectangle} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
-              <View>
+             <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
+              <View style={styles.rectangle} >
                   <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
 
                   {/* Texto */}
 
                   <Text style={styles.rectText}>{item.name}</Text>
-                  <Text style={styles.rectText}>{item.value}</Text>
+                  <Text style={styles.rectText}>{item.value}%</Text>
                   
                   {/* Seta e Percentagem */}
                   <View style={styles.arrowContainer}>
@@ -288,8 +288,6 @@ const SingularBasket = () => {
                   </View>
               </View>
             </Link>
-             
-         
           ))}
         </View>
       )}
