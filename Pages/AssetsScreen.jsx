@@ -86,22 +86,14 @@ const AssetsScreen = () => {
         <ScrollView contentContainerStyle={styles.mainContent}>
           {data.map((item) => (
             <View key={item.id} style={styles.row}>
-              <Link
-                style={styles.card}
-                to={{
-                  pathname: `/coinPage/${item.name}/${item.current_price}`,
-                }}
-              >
-                <View style={styles.row}>
-                  <Image
-                    source={{ uri: item.image }}
-                    style={styles.cardImage}
-                  />
-
-                  <Text style={styles.cardTitle}>
-                    {item.name} ({item.symbol.toUpperCase()})
-                  </Text>
-
+              <Link style={styles.card} to={{ pathname: `/coinPage/${item.name}/${item.current_price}`}}>
+                <View style={[styles.row, { justifyContent: 'space-between', alignItems: 'center', flex: 1 }]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image source={{ uri: item.image }} style={styles.cardImage}/>
+                    <Text style={styles.cardTitle}>
+                      {item.name} ({item.symbol.toUpperCase()})
+                    </Text>
+                  </View>
                   <Text style={styles.cardAmount}>
                     ${item.current_price.toFixed(2)}
                   </Text>
