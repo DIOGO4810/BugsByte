@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, Platform, StatusBar as RNStatusBar } from 're
 import { NativeRouter, Route, Routes } from 'react-router-native'; // Alterei para NativeRouter e Routes
 import HomeScreen from './Pages/HomeScreen'; 
 import AssetsScreen from './Pages/AssetsScreen';
+import SingularAsset from './Pages/SingularAsset';
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <SafeAreaView style={styles.container}>
         <Routes>  {/* Usando Routes ao invés de Switch */}
           <Route path="/" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
+
           <Route path="/baskets" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
 
           <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}

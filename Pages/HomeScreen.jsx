@@ -1,12 +1,61 @@
-import React from "react";
-import { SafeAreaView, View, Text, StyleSheet, ScrollView } from "react-native";
+
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
+import { createArrayObj, totalget, teste, Api, search_id } from '../API.js';
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
+
+
 
 const HomeScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
 
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Usando useEffect para buscar dados assim que o componente for montado
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
+        setData(result.slice(0, 12));
+        setLoading(false);  // Atualizando o estado de carregamento
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    };
+
+
+    fetchDataFromAPI();
+  }, []);  // O array vazio significa que isso será executado apenas uma vez
+
+
+
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Carregando...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    console.log(error);
+    return (
+      <View style={styles.centered}>
+        <Text>Erro: {error.message}</Text>
+      </View>
+    );
+  }
+
+
   // Função para verificar se o link está ativo
   const isActive = (path) => location.pathname === path;
+
 
   const items = [
     { id: 1, title: "Sad" },
@@ -39,6 +88,7 @@ const HomeScreen = () => {
         </View>
 
         <ScrollView contentContainerStyle={styles.mainContent}>
+
           {items.map((item) => (
             <View key={item.id} style={styles.row}>
               <Link to={item.route} key={item.id} style={styles.card}>
@@ -46,6 +96,7 @@ const HomeScreen = () => {
               </Link>
             </View>
           ))}
+
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -71,7 +122,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#202020",
   },
   footerButton: {
-    width: "45%",
+
+    width: '45%',
+
     marginHorizontal: 5,
     backgroundColor: "#202020",
     paddingVertical: 12,
