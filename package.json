@@ -2,6 +2,7 @@
   "name": "bugsbyte",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -9,10 +10,13 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "expo": "~52.0.41",
     "expo-status-bar": "~2.0.1",
+    "puppeteer": "^24.4.0",
     "react": "18.3.1",
     "react-native": "0.76.7",
+    "react-native-svg-charts": "^5.4.0",
     "react-router-native": "^6.30.0"
   },
   "devDependencies": {
