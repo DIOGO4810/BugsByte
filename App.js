@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { SafeAreaView, StyleSheet, Platform, StatusBar as RNStatusBar } from 'react-native';
 import { NativeRouter, Route, Routes } from 'react-router-native'; // Alterei para NativeRouter e Routes
@@ -5,7 +6,8 @@ import HomeScreen from './Pages/HomeScreen';
 import AssetsScreen from './Pages/AssetsScreen';
 import SingularAsset from './Pages/SingularAsset';
 
-export default function App() {
+
+const App=()=> {
   return (
     <NativeRouter> {/* Usando NativeRouter ao invés de Router */}
       <SafeAreaView style={styles.container}>
@@ -16,11 +18,17 @@ export default function App() {
 
           <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}
 
+          <Route path="/coinPage/:name/:price" element={<SingularAsset />} /> {/* Defina uma rota para Assets */}
+
+
         </Routes>
       </SafeAreaView>
-    </NativeRouter>
+      </NativeRouter>
+
   );
 }
+export default App;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -29,3 +37,4 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0,
   },
 });
+
