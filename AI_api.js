@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import Config from "react-native-config";
 
 const ai = new GoogleGenAI({ apiKey: process.env.EXPO_PUBLIC_GEMINI_KEY});
 
@@ -7,7 +6,7 @@ async function GeminiCall(moedas) {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-lite",
-      contents: `Resuma as notícias mais relevantes sobre estas ${moedas} da última semana. Concentre-se apenas nas criptomoedas que tiveram as maiores variações (quedas ou subidas). Explique brevemente os motivos por trás dessas mudanças. Limite a resposta a 3 linhas.`,
+      contents: `Resuma as notícias mais relevantes sobre estas ${moedas} da última semana e não me contes mais informações sobre outras moedas. Concentre-se apenas nas criptomoedas que tiveram as maiores variações (quedas ou subidas). Explique brevemente os motivos por trás dessas mudanças. Limite a resposta a 3 linhas.`,
     });
 
     return response.text;  // Retorna o texto gerado pela API
