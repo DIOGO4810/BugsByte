@@ -1,6 +1,9 @@
 import tf from '@tensorflow/tfjs';
 import {Api} from './API.js';
 
+import axios from 'axios';
+
+
 
 // Generate synthetic training data (replace with real crypto prices)
 
@@ -12,53 +15,50 @@ const generateData = (async(crypto) => {
 
 
 // Prepare data for LSTM model
-const prepareData = (data, lookBack = 90) => {
+const prepareData = (async (data, lookBack = 90) => {
     let xs = [], ys = [];
+    console.log("LENGTH " + data.len);
+
     for (let i = 0; i < data.length - lookBack; i++) {
         xs.push(data.slice(i, i + lookBack));
         ys.push(data[i + lookBack]);
     }
+    console.log("PL");
+
     return {
         xs: tf.tensor2d(xs, [xs.length, lookBack]),
         ys: tf.tensor2d(ys, [ys.length, 1])
     };
-};
+});
 
-
-// Define LSTM model
-const model = tf.sequential();
-model.add(tf.layers.dense({ inputShape: [90], units: 10, activation: 'relu' }));
-model.add(tf.layers.dense({ units: 1 }));
-model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
 
 // Train model
-const training = (async (cripto) => {
-    const cryptoPrices = await generateData(cripto);
-    const { xs, ys } = prepareData(cryptoPrices);
+export const predict = (async () => {
+    console.log("ola");
+    const cryptoPrices = await generateData('bitcoin');
+    console.log("POCRL");
+    const { xs, ys } = await prepareData(cryptoPrices);
+    const model = tf.sequential(); 
+    model.add(tf.layers.dense({ inputShape: [90], units: 10, activation: 'relu' }));
+    model.add(tf.layers.dense({ units: 1 }));
+    model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
+
 
     await model.fit(xs, ys, {
-        epochs: 200,
+        epochs: 20,
         batchSize: 10,
         callbacks: {
             onEpochEnd: (epoch, logs) => console.log(`Epoch ${epoch + 1}: Loss = ${logs.loss}`)
         }
     });
 
-    return model;
     // Predict future price
-})();
-
-const getPredict = (async (model,crypto) => {
-    const cryptoPrices = await generateData( crypto );
     const testInput = tf.tensor2d([cryptoPrices.slice(-90)], [1, 90]);
     const prediction = model.predict(testInput);
-    const predictedValue = prediction.arraySync()[0][0];
-    return predictedValue;
-})
+    console.log(prediction.dataSync()[0]);
+    return (prediction.dataSync()[0]);
+});
 
-(async () => {
-    const model = await training ('bitcoin');
-    const result = await getPredict(model,'bitcoin');
-    console.log(predictedValue);
-})
+
+predict();
 

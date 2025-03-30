@@ -89,7 +89,7 @@ const AssetsScreen = () => {
               <Link
                 style={styles.card}
                 to={{
-                  pathname: `/coinPage/${item.name}/${item.current_price}`,
+                  pathname: `/coinPage/${item.id}/${item.name}/${item.current_price}`,
                 }}
               >
                 <View style={styles.row}>
