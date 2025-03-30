@@ -17,13 +17,11 @@ const generateData = (async(crypto) => {
 // Prepare data for LSTM model
 const prepareData = (async (data, lookBack = 90) => {
     let xs = [], ys = [];
-    console.log("LENGTH " + data.len);
 
     for (let i = 0; i < data.length - lookBack; i++) {
         xs.push(data.slice(i, i + lookBack));
         ys.push(data[i + lookBack]);
     }
-    console.log("PL");
 
     return {
         xs: tf.tensor2d(xs, [xs.length, lookBack]),
@@ -33,10 +31,9 @@ const prepareData = (async (data, lookBack = 90) => {
 
 
 // Train model
-export const predict = (async () => {
-    console.log("ola");
-    const cryptoPrices = await generateData('bitcoin');
-    console.log("POCRL");
+export const predict = (async (crypto) => { 
+    console.log(crypto);
+    const cryptoPrices = await generateData(crypto);;
     const { xs, ys } = await prepareData(cryptoPrices);
     const model = tf.sequential(); 
     model.add(tf.layers.dense({ inputShape: [90], units: 10, activation: 'relu' }));
@@ -45,7 +42,7 @@ export const predict = (async () => {
 
 
     await model.fit(xs, ys, {
-        epochs: 20,
+        epochs: 100,
         batchSize: 10,
         callbacks: {
             onEpochEnd: (epoch, logs) => console.log(`Epoch ${epoch + 1}: Loss = ${logs.loss}`)
@@ -59,6 +56,4 @@ export const predict = (async () => {
     return (prediction.dataSync()[0]);
 });
 
-
-predict();
 

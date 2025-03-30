@@ -21,8 +21,8 @@ const SingularAsset = () => {
     const fetchDataFromAPI = async () => {
       try {
         // Fetch real data from the API
-        const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
-        setData(result.slice(0, 12));
+        const result = await Api(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur`);
+        setData(result)
         setLoading(false);
 
         // Chama a função GeminiCall e armazena a previsão no estado
@@ -35,7 +35,7 @@ const SingularAsset = () => {
 
       // Fetch prediction data and store it in state
       try {
-        const help = await Api('http://10.14.0.130:5000/predict')  // This will return the rounded prediction value
+        const help = await Api(`http://10.14.0.130:5000/predict/${id}`)  // This will return the rounded prediction value
         setPredicts(help);  // Update the state with the prediction value
       } catch (err) {
         console.error("Error fetching prediction:", err);
@@ -89,7 +89,7 @@ const SingularAsset = () => {
         {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
           {predicts !== null ? (
-            <Text style={styles.textoPrevisao}>Previsão de Preço: {predicts.resultado}€</Text>
+            <Text style={styles.textoPrevisao}>Previsão de Preço: {predicts.previsto}€</Text>
           ) : (
             <Text style={styles.textoPrevisao}>Carregando previsão...</Text>
           )}
