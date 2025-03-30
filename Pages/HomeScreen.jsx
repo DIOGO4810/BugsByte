@@ -12,7 +12,7 @@ import {
 import { createArrayObj, totalget, teste, Api, search_id } from "../API.js";
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
 
-const baskets=[ {name:"Criptomoedas Populares", index:0}, {name: "Criptomoedas Emergentes e Estáveis",index:1}]
+const baskets=[ {name:"Basket de Criptomoedas mais estáveis", index:0}, {name: "Basket de Criptomoedas menos estáveis",index:1}]
 
 const HomeScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
@@ -44,7 +44,7 @@ const HomeScreen = () => {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando...</Text>
+        <Text style={styles.loadingText}>Esperando por mais API Keys do CoinGecko</Text>;
       </View>
     );
   }
@@ -87,6 +87,8 @@ const HomeScreen = () => {
         </View>
 
         <ScrollView contentContainerStyle={styles.mainContent}>
+         <Image source={require('../assets/crytpo.jpeg')} style={{marginVertical:10, width: "80%", height: "100%", borderRadius:10, alignSelf:"center" }} />
+
           {baskets.map((item) => (
             <View key={item.id} style={styles.row}>
 

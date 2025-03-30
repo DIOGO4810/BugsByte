@@ -225,7 +225,7 @@ const SingularBasket = () => {
                 }
               ]}
             >
-             {!expandedCurrent &&(<Text style={styles.titlesquare}>Current</Text>)} 
+             {!expandedCurrent &&(<Text style={styles.titlesquare}>Current{'\n'}{'\n'}Click to see More</Text>)} 
               {expandedCurrent && (
                 <View style={styles.expandedContent}>
                   
@@ -337,7 +337,7 @@ const SingularBasket = () => {
              
           {filteredBaskets.map(item => (
            
-             <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
+             <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
               <View style={styles.rectangle} >
                 
                   <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
