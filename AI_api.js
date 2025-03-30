@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import Config from "react-native-config";
 
 const ai = new GoogleGenAI({ apiKey: process.env.EXPO_PUBLIC_GEMINI_KEY});
 

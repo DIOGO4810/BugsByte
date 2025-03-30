@@ -19,7 +19,7 @@ const baskets=[
                 {name:'solana', value: 5.07},
                 {name: 'dogecoin', value: 2.02},
                 {name: 'cardano' , value: 1.86},
-                {name:'tron', value: 6.27},
+                {name:'tron', value: 11.4},
               ],
   
           [      {name:'bitcoin', value: 77.4},
@@ -35,6 +35,10 @@ const baskets=[
   
             ]]
 
+
+
+           
+            
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const SingularBasket = () => {
@@ -135,8 +139,52 @@ const SingularBasket = () => {
 
     setExpandedPredictor(false);  // Marca como fechado
   };
-  
-  console.log("jelo" + data[0].image);
+
+  const totalMarketCap = data.reduce((sum, coin) => sum + coin.market_cap, 0);
+
+  const marketDominance = (basket.reduce((sum,item) => {
+  const coinData=data[search_id(item.name)];
+  if (coinData) {
+    return sum + coinData.market_cap;
+   
+  } return sum*100;
+},0)/ (totalMarketCap)).toFixed(5);
+
+
+  const totalVolatility =( basket.reduce((sum, item) => {
+    const coinData = data[search_id(item.name)];
+    if (coinData) {
+      const media=(coinData.high_24h+coinData.low_24h)/2;
+      return sum + ((coinData.high_24h-coinData.low_24h)/ media) * (item.value/100);
+    }
+    return sum;
+  }, 0)/ 
+  basket.length
+ ).toFixed(5);
+
+  const weightedPriceChange = (
+    basket.reduce((sum, item) => {
+      const coinData = data[search_id(item.name)];
+      if (coinData) {
+        return sum + (coinData.price_change_percentage_24h * (item.value/100));
+      }
+      return sum;
+    }, 0) /
+    basket.length
+  ).toFixed(5);
+
+  const price=(
+    basket.reduce((sum, item) => {
+      const coinData = data[search_id(item.name)];
+      if (coinData) {
+        return sum + (coinData.current_price* (item.value/100));
+      }
+      return sum;
+    }, 0)
+
+  ).toFixed(2);
+
+
   return (
     <ScrollView style={styles.appContainer}>
      
@@ -144,7 +192,7 @@ const SingularBasket = () => {
          <View style={styles.headerContainer}>
          {data && data.length > 0 && (
            <Link to="/baskets" style={styles.link}>
-             {/* Substituindo o texto por um ícone */}
+             
              <Ionicons name="arrow-back" size={30} color="white"/>
            </Link>
          )}
@@ -180,17 +228,40 @@ const SingularBasket = () => {
              {!expandedCurrent &&(<Text style={styles.titlesquare}>Current</Text>)} 
               {expandedCurrent && (
                 <View style={styles.expandedContent}>
-                  {/* Botão de Fechar no canto superior direito */}
-                  <Text style={styles.titlebox}>Current</Text>
-                  <TouchableOpacity onPress={closeCurrent} style={styles.closeButtonCurrentContainer} accessibilityLabel="Fechar">
-                    <Icon name="close" size={24} color="#fff" />
-                  </TouchableOpacity>
-                  {/*<Text style={styles.graphText}>[ Gráfico Aqui ]</Text>*/}
+                  
+                    <Text style={styles.titlebox}>Current</Text>
+                     <TouchableOpacity onPress={closeCurrent} style={styles.closeButtonCurrentContainer} accessibilityLabel="Fechar">
+                     <Icon name="close" size={24} color="#fff" />
+                     </TouchableOpacity>
+                  
                   <View style={styles.statsContainer}>
-                    <View style={styles.greenBox}><Text>Aumentaram</Text></View>
-                    <View style={styles.redBox}><Text>Desceram</Text></View>
+                      <View style={[styles.box,{backgroundColor:  weightedPriceChange>12? 'green':'red'}]}>
+                      <Text style={[styles.stat,{ fontSize:18,marginBottom:10}]}>Retorno Total nas Últimas 24h:</Text>
+                      <Text style={[styles.stat,{ fontSize:20}]}>{weightedPriceChange}%</Text>
+                    </View>
+
+                    <View style={[styles.priceBox,{backgroundColor: 'green'}]}>
+                    <Text style={[styles.stat,{ fontSize:18,marginBottom:10}]}>Preço Total:</Text>
+                    <Text style={[styles.stat,{ fontSize:20}]}>{price} €</Text>
                   </View>
-                </View>
+
+                     
+
+                 
+                  <View style={[styles.box,{backgroundColor:  totalVolatility<20? 'green':'red'}]}>
+                    <Text style={[styles.stat,{ fontSize:18,marginBottom:10}]}>Volatilidade Percentual nas Últimas 24h:</Text>
+                    <Text style={[styles.stat,{ fontSize:20}]}>{totalVolatility}%</Text>
+                  </View>
+
+                 <View style={[styles.box,{backgroundColor:  marketDominance>5? 'green':'red'}]}>
+                        <Text style={[styles.stat,{ fontSize:18,marginBottom:10}]}> Dominância de Mercado:</Text>
+                        <Text style={[styles.stat,{ fontSize:20}]}> {marketDominance} % </Text>
+                      </View>
+
+                
+                 
+              </View>
+              </View>
               )}
             </Animated.View>
           </TouchableOpacity>
@@ -217,17 +288,17 @@ const SingularBasket = () => {
               {expandedPredictor && (
               <ScrollView>
                 <View style={styles.expandedContent}>
-                   {/* Botão de Fechar no canto superior direito */}
+                  
                    <Text style={styles.titlebox}>Price Predictor</Text>
                    <TouchableOpacity onPress={closePredictor} style={styles.closeButtonPredictorContainer}>
                     <Icon name="close" size={24} color="#fff" />
                  </TouchableOpacity>
-                   {/*<Text style={styles.graphText}>[ Gráfico Aqui ]</Text>*/}
+                   
                    <View style={styles.statsContainer}>
                       <View style={styles.greenBox}>
                         <Text>Aumentaram</Text>
                       </View>
-                      <View style={styles.redBox}>
+                      <View style={styles.box}>
                         <Text>Desceram</Text>
                       </View>
                   </View>
@@ -268,13 +339,14 @@ const SingularBasket = () => {
            
              <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
               <View style={styles.rectangle} >
+                
                   <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
 
                   {/* Texto */}
-
+                <View style={{width:100}}>
                   <Text style={styles.rectText}>{item.name}</Text>
                   <Text style={styles.rectText}>{item.value}%</Text>
-                  
+                </View>
                   {/* Seta e Percentagem */}
                   <View style={styles.arrowContainer}>
                     <Ionicons
@@ -311,7 +383,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     marginLeft:30,
     fontWeight: 'bold',
-    textAlign: 'left',
+    textAlign: 'center',
     
   },
   expandedContent: {
@@ -349,7 +421,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 20,
     marginTop:10,
-    fontSize: 30,
+    fontSize: 40,
   },
 
   closeButtonPredictorContainer: {
@@ -374,27 +446,37 @@ const styles = StyleSheet.create({
   },
 
   statsContainer: {
-    marginVertical:20,
-    flexDirection: 'row',
-    gap: 40,
-  },
 
-  greenBox: {
-    width: 150,
-    height: 150,
-    backgroundColor: 'limegreen',
+    marginBottom:10,
+    flexDirection: 'column',
+    textAlign:"center",
+    gap: 30,
+  },
+  stat:{
+      color:'white',
+      textAlign:'center',
+      marginBottom:5,
+  },
+  priceBox: {
+    width: 300,
+    height: 90,
+    padding:10,
+    fontSize:18,
+    borderRadius: 30,
+    color:"white",
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
   },
 
-  redBox: {
-    width: 150,
-    height: 150,
-    backgroundColor: 'red',
+  box: {
+    width: 300,
+    height: 120,
+    padding:10,
+    fontSize:18,
+    borderRadius: 30,
+    color:"white",
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
   },
 
   noticiasContainer: {
@@ -427,6 +509,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 20,
     marginTop: 20,
+    marginBottom:40,
   },
 
   rectangle: {
@@ -459,7 +542,10 @@ const styles = StyleSheet.create({
   arrowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    color: 'white'
+    color: 'white',
+    width: 100,
+    marginLeft:-20,
+
   },
 
   percentage: {
