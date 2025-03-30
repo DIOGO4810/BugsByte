@@ -226,7 +226,7 @@ const SingularBasket = () => {
                 }
               ]}
             >
-             {!expandedCurrent &&(<Text style={styles.titlesquare}>Current</Text>)} 
+             {!expandedCurrent &&(<Text style={styles.titlesquare}>Current{'\n'}{'\n'}Click to see More</Text>)} 
               {expandedCurrent && (
                 <View style={styles.expandedContent}>
                   
