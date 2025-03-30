@@ -2,22 +2,16 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-native';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Link } from 'react-router-native';
+import { predict } from '../Prediction.js'; // Assuming predict is imported correctly
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
 import GeminiCall from '../AI_api.js';
 import { Api, search_id} from '../API.js';
 
 const SingularAsset = () => {
-  const noticias = [
-    { id: '1', text: 'Notícia 1 aqui' },
-    { id: '2', text: 'Notícia 2 aqui' },
-    { id: '3', text: 'Notícia 3 aqui' },
-    { id: '4', text: 'Notícia 4 aqui' },
-    { id: '5', text: 'Notícia 5 aqui' },
-  ];
+  const [predicts, setPredicts] = useState(0);  // Store prediction value
 
-  const { id,name, price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
+  const { id,name, price } = useParams();
 
-  console.log(name);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [previsaoGemini, setPrevisaoGemini] = useState(null);
@@ -26,6 +20,7 @@ const SingularAsset = () => {
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
+        // Fetch real data from the API
         const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
         setData(result.slice(0, 12));
         setLoading(false);
@@ -37,11 +32,18 @@ const SingularAsset = () => {
         setError(err);
         setLoading(false);
       }
+
+      // Fetch prediction data and store it in state
+      try {
+        const help = await Api('http://10.14.0.130:5000/predict')  // This will return the rounded prediction value
+        setPredicts(help);  // Update the state with the prediction value
+      } catch (err) {
+        console.error("Error fetching prediction:", err);
+      }
     };
 
     fetchDataFromAPI();
-    console.log("Nome do ativo: " + name);
-  }, [name]); 
+  }, [name]); // Re-fetch data when name changes
 
   if (loading) {
     return <Text style={styles.loadingText}>Carregando...</Text>;
@@ -86,16 +88,16 @@ const SingularAsset = () => {
 
         {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
-          <Text style={styles.textoPrevisao}>{previsaoGemini}</Text>
+          {predicts !== null ? (
+            <Text style={styles.textoPrevisao}>Previsão de Preço: {predicts.resultado}€</Text>
+          ) : (
+            <Text style={styles.textoPrevisao}>Carregando previsão...</Text>
+          )}
         </View>
 
         <View style={styles.noticiasContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.noticiasContentContainer} nestedScrollEnabled={true}>
-            {noticias.map((noticia) => (
-              <View key={noticia.id} style={styles.caixaNoticias}>
-                <Text style={styles.textoNoticias}>{noticia.text}</Text>
-              </View>
-            ))}
+            
           </ScrollView>
         </View>
     </ScrollView>
