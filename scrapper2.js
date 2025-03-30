@@ -1,21 +1,13 @@
-const puppeteer = require('puppeteer');
+import Twit from "twit";
 
+const T = new Twit({
+  consumer_key: 'v60HoIV3f1tyyNwJzPmq1IwLo',
+  consumer_secret: 'qbt17cciD9UwevtjRPwzjOa4I18gEmmPrmBq0Gy1OqNUQ1y8NK',
+  access_token: '4536097768-UyaCa570IsV5svuHJsuAOLKk4ZZPfz43r9kxMDo',
+  access_token_secret: 'wYVuznYXo6nY7cP8Vr0IZFTVcjIp5via1Z6ICWcms6Fb8',
+});
 
-const url = "https://cryptoslate.com/featured-news/";
+T.get('/2/tweets/:id', {count: 10 }, (err, data, response) => {
+  console.log(data);
+});
 
-const main = async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(url);
-    
-    const allArticles = await page.evaluate(() => {
-        const articles = document.querySelectorAll('article');
-        return Array.from(articles).slice(0,).map((article) => {
-            const title = article.querySelector('h2').innerText;
-            return title;
-        });
-    });
-    console.log(allArticles); 
-}
-
-main();

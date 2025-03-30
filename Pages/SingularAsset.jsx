@@ -3,6 +3,8 @@ import { useParams } from 'react-router-native';
 import { View, Text, StyleSheet, ScrollView,Image} from 'react-native';
 import { Link } from 'react-router-native';
 import { Api } from '../API.js';
+
+import {predict} from '../Prediction.js'
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
 
 const SingularAsset = () => {
@@ -25,6 +27,7 @@ const SingularAsset = () => {
     const fetchDataFromAPI = async () => {
       try {
         const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
+        const prediction = await predict()
         setData(result.slice(0, 12));
         setLoading(false);
       } catch (err) {
