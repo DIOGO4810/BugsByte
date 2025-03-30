@@ -6,8 +6,15 @@ import HomeScreen from './Pages/HomeScreen';
 import AssetsScreen from './Pages/AssetsScreen';
 import SingularAsset from './Pages/SingularAsset';
 
+import GeminiCall from './AI_api';
+
+import SingularBasket from './Pages/SingularBasket';
+
 
 const App=()=> {
+  const response = GeminiCall();
+  console.log(response);
+  
   return (
     <NativeRouter> {/* Usando NativeRouter ao invés de Router */}
       <SafeAreaView style={styles.container}>
@@ -15,6 +22,8 @@ const App=()=> {
           <Route path="/" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
 
           <Route path="/baskets" element={<HomeScreen />} />  {/* Usando "element" ao invés de "component" */}
+
+          <Route path="/basketPage/:name/:index" element={<SingularBasket />} /> {/* Defina uma rota para Assets */}
 
           <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}
 

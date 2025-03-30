@@ -86,22 +86,14 @@ const AssetsScreen = () => {
         <ScrollView contentContainerStyle={styles.mainContent}>
           {data.map((item) => (
             <View key={item.id} style={styles.row}>
-              <Link
-                style={styles.card}
-                to={{
-                  pathname: `/coinPage/${item.id}/${item.name}/${item.current_price}`,
-                }}
-              >
-                <View style={styles.row}>
-                  <Image
-                    source={{ uri: item.image }}
-                    style={styles.cardImage}
-                  />
-
-                  <Text style={styles.cardTitle}>
-                    {item.name} ({item.symbol.toUpperCase()})
-                  </Text>
-
+              <Link style={styles.card} to={{ pathname: `/coinPage/${item.id}/${item.name}/${item.current_price}`}}>
+                <View style={[styles.row, { justifyContent: 'space-between', alignItems: 'center', flex: 1 }]}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image source={{ uri: item.image }} style={styles.cardImage}/>
+                    <Text style={styles.cardTitle}>
+                      {item.name} ({item.symbol.toUpperCase()})
+                    </Text>
+                  </View>
                   <Text style={styles.cardAmount}>
                     ${item.current_price.toFixed(2)}
                   </Text>
@@ -121,7 +113,7 @@ const styles = StyleSheet.create({
   },
   safeContainer: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#000000",
   },
   container: {
     flex: 1,
@@ -131,12 +123,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: "#202020",
+    backgroundColor: "#000000",
   },
   footerButton: {
     width: "45%",
     marginHorizontal: 5,
-    backgroundColor: "#202020",
+    backgroundColor: "#000000",
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -158,27 +150,29 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#11181C",
     padding: 15,
     borderRadius: 10,
-    alignItems: "center",
     marginHorizontal: 5,
     elevation: 5,
     shadowColor: "#000",
     shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowRadius: 5
   },
   cardTitle: {
-    fontSize: 22,
-    color: "#333",
+    fontSize: 18,
+    color: "#ffffff",
     marginBottom: 5,
-    marginHorizontal: 20,
+    marginHorizontal:20,
   },
   cardAmount: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "bold",
     color: "#0064f9",
-    marginBottom: 10,
+    marginBottom: 5,
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    alignItems: 'center'
   },
   cardImage: {
     width: 50,
