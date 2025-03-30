@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-native';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Link } from 'react-router-native';
-import { Api } from '../API.js';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
 import GeminiCall from '../AI_api.js';
+import { Api, search_id} from '../API.js';
 
 const SingularAsset = () => {
   const noticias = [
@@ -15,7 +15,7 @@ const SingularAsset = () => {
     { id: '5', text: 'Notícia 5 aqui' },
   ];
 
-  const { name, price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
+  const { id,name, price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
 
   console.log(name);
   const [data, setData] = useState(null);
@@ -62,27 +62,40 @@ const SingularAsset = () => {
           {data && data.length > 0 && (
             <Link to="/baskets" style={styles.link}>
               {/* Substituindo o texto por um ícone */}
-              <Ionicons name="arrow-back" size={30} color="black" />
+              <Ionicons name="arrow-back" size={30} color="white"/>
             </Link>
           )}
-          <View style={styles.header}>
-            <Text style={styles.coinText}>{name}</Text> {/* Exibe o nome do ativo aqui */}
-            <Text style={styles.currentCoinPriceText}>{price}€ </Text>
-          </View>
-        </View>
+            <View style={styles.header}>
+              <View>
+                <Image source={{uri: data[search_id(data,id)].image}} style={styles.coinIcon}/>
+              </View>
 
-        <View style={styles.containerGrafico}>
-          <View style={styles.yAxisLabels}>
-            {[0, 10, 20, 30, 40, 50].map((value) => (
-              <Text key={value} style={styles.yAxisLabelText}>
-                {value}
+              <Text style={styles.coinText}>{name}</Text>
+
+              <Text style={[styles.percentage, { color: data[search_id(data,id)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
+                      {data[search_id(data,id)].price_change_percentage_24h}%
               </Text>
-            ))}
-          </View>
-          <View>
-            <Text style={styles.textoPrevisao}>Gráfico aqui</Text>
-          </View>
+
+              <Text style={[styles.nome, { color: data[search_id(data,id)].price_change_percentage_24h >= 0 ? "green" : "red"}]}>
+                      {price}€
+              </Text>
+
+            </View>
         </View>
+      </View>
+
+      {/* 
+                  <View style={styles.arrowContainer}>
+                    <Ionicons
+                      name={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "arrow-up" : "arrow-down"}
+                      size={24}
+                      color={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red"}
+                    />
+                    <Text style={[styles.percentage, { color: data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
+                      {data[search_id(data,item.name)].price_change_percentage_24h}%
+                    </Text>
+                  </View>
+      */}
 
         {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
@@ -98,7 +111,6 @@ const SingularAsset = () => {
             ))}
           </ScrollView>
         </View>
-      </View>
     </ScrollView>
   );
 };
@@ -112,13 +124,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginBottom: 50
+    marginBottom: 30
   },
   headerContainer: {
     width: '90%',
     alignItems: 'flex-start',
     marginTop: 10,
-    marginBottom: 23,
+    marginBottom: 0,
   },
   header: {
     flexDirection: 'row',
@@ -131,6 +143,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white'
   },
+  coinIcon: {
+    width: 45,
+    height: 45,
+    marginRight: 10
+  },
   containerGrafico: {
     width: '90%',
     height: 200,
@@ -138,43 +155,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
   },
-  yAxisLabels: {
-    position: 'absolute',
-    left: -5,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    paddingVertical: 15,
-  },
-  yAxisLabelText: {
-    fontSize: 12,
-    color: 'white',
-    textAlign: 'right',
-    width: 33,
-  },
   caixaPrevisao: {
-    marginTop: 20,
     backgroundColor: '#11181C',
-    paddingVertical: 100,
-    paddingHorizontal: 20,
     borderRadius: 10,
-    width: '90%',
+    marginLeft: 35,
     alignItems: 'center',
     marginBottom: 20,
+    maxWidth: '80%',
+    maxHeight: '90%'
   },
   textoPrevisao: {
     fontSize: 19,
     color: 'white',
     textAlign: 'center',
+    lineHeight: 30
   },
   noticiasContainer: {
     marginTop: 10,
-    width: '90%',
-    height: '20%',
+    minWidth: '90%',
+    minHeight: '50%',
+    maxWidth: '90%',
+    maxHeight: '50%',
+    marginBottom: 30
   },
   noticiasContentContainer: {
     flexDirection: 'row',
     paddingVertical: 10,
+    marginLeft: 35,
+    marginRight: 35
   },
   caixaNoticias: {
     backgroundColor: '#11181C',
@@ -195,6 +203,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    marginLeft: 2
   },
 
   loadingText: {
@@ -210,12 +219,19 @@ const styles = StyleSheet.create({
   link: {
     marginVertical: 10,
     paddingVertical: 5,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '000000',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  percentage: {
+    marginLeft: 2,
+    fontSize: 16
+  },
+  nome: {
+    marginLeft: 10,
+    fontSize: 16
+  }
 });
 
 export default SingularAsset;
