@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons'; // Ícones para as setas
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Link, useParams} from "react-router-native"; 
 import { Api, search_id } from '../API.js';
+import { previsto_price_basket } from "../Baskets.js";
 
 
 
@@ -63,7 +64,7 @@ const SingularBasket = () => {
       const fetchDataFromAPI = async () => {
         try {
           const result = await Api(
-            "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+            "http://10.14.0.130:5000/info"
           );
           setData(result);
           setLoading(false); // Atualizando o estado de carregamento
@@ -295,12 +296,7 @@ const SingularBasket = () => {
                  </TouchableOpacity>
                    
                    <View style={styles.statsContainer}>
-                      <View style={styles.greenBox}>
-                        <Text>Aumentaram</Text>
-                      </View>
-                      <View style={styles.box}>
-                        <Text>Desceram</Text>
-                      </View>
+                      <Text style={{color:'white'}}>{previsto_price_basket(basket[index])}</Text>
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
                     <View style={styles.noticiasContainer}>
@@ -337,7 +333,7 @@ const SingularBasket = () => {
              
           {filteredBaskets.map(item => (
            
-             <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
+             <Link key={item.name} to={{ pathname: `/coinPage/${item.name}/${item.name}/${data[search_id(data,item.name)].current_price}`}}>
               <View style={styles.rectangle} >
                 
                   <Image source={{uri:data[search_id(data,item.name)].image}} style={styles.rectCircle}/>
@@ -446,7 +442,7 @@ const styles = StyleSheet.create({
   },
 
   statsContainer: {
-
+    color: 'white',
     marginBottom:10,
     flexDirection: 'column',
     textAlign:"center",

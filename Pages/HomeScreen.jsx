@@ -17,46 +17,46 @@ const baskets=[ {name:"Criptomoedas Populares", index:0}, {name: "Criptomoedas E
 const HomeScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [data, setData] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
 
-  // Usando useEffect para buscar dados assim que o componente for montado
-  useEffect(() => {
-    const fetchDataFromAPI = async () => {
-      try {
-        const result = await Api(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
-        );
-        setData(result.slice(0, 10));
-        setLoading(false); // Atualizando o estado de carregamento
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    };
+  // // Usando useEffect para buscar dados assim que o componente for montado
+  // useEffect(() => {
+  //   const fetchDataFromAPI = async () => {
+  //     try {
+  //       const result = await Api(
+  //         "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+  //       );
+  //       setData(result.slice(0, 10));
+  //       setLoading(false); // Atualizando o estado de carregamento
+  //     } catch (err) {
+  //       setError(err);
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchDataFromAPI();
-    console.log("Rodou useEffect");
-  }, []); // O array vazio significa que isso será executado apenas uma vez
+  //   fetchDataFromAPI();
+  //   console.log("Rodou useEffect");
+  //}, []); // O array vazio significa que isso será executado apenas uma vez
 
-  if (loading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando...</Text>
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //       <Text>Carregando...</Text>
+  //     </View>
+  //   );
+  // }
 
-  if (error) {
-    console.log(error);
-    return (
-      <View style={styles.centered}>
-        <Text>Erro: {error.message}</Text>
-      </View>
-    );
-  }
+  // if (error) {
+  //   console.log(error);
+  //   return (
+  //     <View style={styles.centered}>
+  //       <Text>Erro: {error.message}</Text>
+  //     </View>
+  //   );
+  // }
 
   // Função para verificar se o link está ativo
   const isActive = (path) => location.pathname === path;
@@ -88,7 +88,7 @@ const HomeScreen = () => {
 
         <ScrollView contentContainerStyle={styles.mainContent}>
           {baskets.map((item) => (
-            <View key={item.id} style={styles.row}>
+            <View key={item.index} style={styles.row}>
 
               <Link style={styles.card} to={{
                 pathname: `/basketPage/${item.name}/${item.index}`,

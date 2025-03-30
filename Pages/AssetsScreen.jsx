@@ -24,7 +24,7 @@ const AssetsScreen = () => {
     const fetchDataFromAPI = async () => {
       try {
         const result = await Api(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+          "http://10.14.0.130:5000/info"
         );
         setData(result.slice(0, 10));
         setLoading(false); // Atualizando o estado de carregamento

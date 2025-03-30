@@ -21,7 +21,7 @@ const SingularAsset = () => {
     const fetchDataFromAPI = async () => {
       try {
         // Fetch real data from the API
-        const result = await Api(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur`);
+        const result = await Api(`http://10.14.0.130:5000/info`);
         setData(result)
         setLoading(false);
 
