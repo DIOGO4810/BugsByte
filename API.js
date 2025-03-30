@@ -18,13 +18,18 @@ export async function createArrayObj() {
         return data; // Adjust based on API response structure
 }
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 
 export const Api = async (url) => {
     try {
       const response = await fetch(url);
   
       if (!response.ok) {
-        throw new Error('Erro ao carregar os dados');
+            console.log("Dormir um pouco");
+            await sleep(30000)
+            console.log("Tentar de Novo");
+            return await Api(url);
       }
   
       const data = await response.json();

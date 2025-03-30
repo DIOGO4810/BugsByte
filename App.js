@@ -27,7 +27,7 @@ const App=()=> {
 
           <Route path="/assets" element={< AssetsScreen/>} /> {/* Defina uma rota para Assets */}
 
-          <Route path="/coinPage/:name/:price" element={<SingularAsset />} /> {/* Defina uma rota para Assets */}
+          <Route path="/coinPage/:id/:name/:price" element={<SingularAsset />} /> {/* Defina uma rota para Assets */}
 
 
         </Routes>

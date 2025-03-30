@@ -1,23 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-native';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Link } from 'react-router-native';
-import { Api } from '../API.js';
+import { predict } from '../Prediction.js'; // Assuming predict is imported correctly
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Importando Ionicons
 import GeminiCall from '../AI_api.js';
+import { Api, search_id} from '../API.js';
 
 const SingularAsset = () => {
-  const noticias = [
-    { id: '1', text: 'Notícia 1 aqui' },
-    { id: '2', text: 'Notícia 2 aqui' },
-    { id: '3', text: 'Notícia 3 aqui' },
-    { id: '4', text: 'Notícia 4 aqui' },
-    { id: '5', text: 'Notícia 5 aqui' },
-  ];
+  const [predicts, setPredicts] = useState(0);  // Store prediction value
 
-  const { name, price } = useParams(); // Agora estamos pegando o valor do parâmetro da URL
+  const { id,name, price } = useParams();
 
-  console.log(name);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [previsaoGemini, setPrevisaoGemini] = useState(null);
@@ -26,8 +20,9 @@ const SingularAsset = () => {
   useEffect(() => {
     const fetchDataFromAPI = async () => {
       try {
-        const result = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
-        setData(result.slice(0, 12));
+        // Fetch real data from the API
+        const result = await Api(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur`);
+        setData(result)
         setLoading(false);
 
         // Chama a função GeminiCall e armazena a previsão no estado
@@ -37,11 +32,18 @@ const SingularAsset = () => {
         setError(err);
         setLoading(false);
       }
+
+      // Fetch prediction data and store it in state
+      try {
+        const help = await Api(`http://10.14.0.130:5000/predict/${id}`)  // This will return the rounded prediction value
+        setPredicts(help);  // Update the state with the prediction value
+      } catch (err) {
+        console.error("Error fetching prediction:", err);
+      }
     };
 
     fetchDataFromAPI();
-    console.log("Nome do ativo: " + name);
-  }, [name]); 
+  }, [name]); // Re-fetch data when name changes
 
   if (loading) {
     return <Text style={styles.loadingText}>Carregando...</Text>;
@@ -62,43 +64,42 @@ const SingularAsset = () => {
           {data && data.length > 0 && (
             <Link to="/baskets" style={styles.link}>
               {/* Substituindo o texto por um ícone */}
-              <Ionicons name="arrow-back" size={30} color="black" />
+              <Ionicons name="arrow-back" size={30} color="white"/>
             </Link>
           )}
-          <View style={styles.header}>
-            <Text style={styles.coinText}>{name}</Text> {/* Exibe o nome do ativo aqui */}
-            <Text style={styles.currentCoinPriceText}>{price}€ </Text>
-          </View>
-        </View>
+            <View style={styles.header}>
+              <View>
+                <Image source={{uri: data[search_id(data,id)].image}} style={styles.coinIcon}/>
+              </View>
 
-        <View style={styles.containerGrafico}>
-          <View style={styles.yAxisLabels}>
-            {[0, 10, 20, 30, 40, 50].map((value) => (
-              <Text key={value} style={styles.yAxisLabelText}>
-                {value}
+              <Text style={styles.coinText}>{name}</Text>
+
+              <Text style={[styles.percentage, { color: data[search_id(data,id)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
+                      {data[search_id(data,id)].price_change_percentage_24h}%
               </Text>
-            ))}
-          </View>
-          <View>
-            <Text style={styles.textoPrevisao}>Gráfico aqui</Text>
-          </View>
+
+              <Text style={[styles.nome, { color: data[search_id(data,id)].price_change_percentage_24h >= 0 ? "green" : "red"}]}>
+                      {price}€
+              </Text>
+
+            </View>
         </View>
+      </View>
 
         {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
-          <Text style={styles.textoPrevisao}>{previsaoGemini}</Text>
+          {predicts !== null ? (
+            <Text style={styles.textoPrevisao}>Previsão de Preço: {predicts.previsto}€</Text>
+          ) : (
+            <Text style={styles.textoPrevisao}>Carregando previsão...</Text>
+          )}
         </View>
 
         <View style={styles.noticiasContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.noticiasContentContainer} nestedScrollEnabled={true}>
-            {noticias.map((noticia) => (
-              <View key={noticia.id} style={styles.caixaNoticias}>
-                <Text style={styles.textoNoticias}>{noticia.text}</Text>
-              </View>
-            ))}
+            
           </ScrollView>
         </View>
-      </View>
     </ScrollView>
   );
 };
@@ -112,13 +113,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginBottom: 50
+    marginBottom: 30
   },
   headerContainer: {
     width: '90%',
     alignItems: 'flex-start',
     marginTop: 10,
-    marginBottom: 23,
+    marginBottom: 0,
   },
   header: {
     flexDirection: 'row',
@@ -131,6 +132,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white'
   },
+  coinIcon: {
+    width: 45,
+    height: 45,
+    marginRight: 10
+  },
   containerGrafico: {
     width: '90%',
     height: 200,
@@ -138,43 +144,34 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
   },
-  yAxisLabels: {
-    position: 'absolute',
-    left: -5,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'space-between',
-    paddingVertical: 15,
-  },
-  yAxisLabelText: {
-    fontSize: 12,
-    color: 'white',
-    textAlign: 'right',
-    width: 33,
-  },
   caixaPrevisao: {
-    marginTop: 20,
     backgroundColor: '#11181C',
-    paddingVertical: 100,
-    paddingHorizontal: 20,
     borderRadius: 10,
-    width: '90%',
+    marginLeft: 35,
     alignItems: 'center',
     marginBottom: 20,
+    maxWidth: '80%',
+    maxHeight: '90%'
   },
   textoPrevisao: {
     fontSize: 19,
     color: 'white',
     textAlign: 'center',
+    lineHeight: 30
   },
   noticiasContainer: {
     marginTop: 10,
-    width: '90%',
-    height: '20%',
+    minWidth: '90%',
+    minHeight: '50%',
+    maxWidth: '90%',
+    maxHeight: '50%',
+    marginBottom: 30
   },
   noticiasContentContainer: {
     flexDirection: 'row',
     paddingVertical: 10,
+    marginLeft: 35,
+    marginRight: 35
   },
   caixaNoticias: {
     backgroundColor: '#11181C',
@@ -195,6 +192,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    marginLeft: 2
   },
 
   loadingText: {
@@ -210,12 +208,19 @@ const styles = StyleSheet.create({
   link: {
     marginVertical: 10,
     paddingVertical: 5,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '000000',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  percentage: {
+    marginLeft: 2,
+    fontSize: 16
+  },
+  nome: {
+    marginLeft: 10,
+    fontSize: 16
+  }
 });
 
 export default SingularAsset;

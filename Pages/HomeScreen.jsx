@@ -70,7 +70,7 @@ const HomeScreen = () => {
             to="/baskets"
             style={[
               styles.footerButton,
-              isActive("/baskets") && styles.activeLink,
+               styles.activeLink,
             ]}
           >
             <Text style={styles.footerButtonText}>Baskets</Text>
@@ -103,19 +103,6 @@ const HomeScreen = () => {
                 
 
               </View>
-
-            {/*  <Link style={styles.card}>
-                <View style={[styles.row, { justifyContent: 'space-between', alignItems: 'center', flex: 1 }]}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image source={{ uri: item.image }} style={styles.cardImage} />
-                    <Text style={styles.cardTitle}>
-                      {item.name} ({item.symbol.toUpperCase()})
-                    </Text>
-                  </View>
-                  <Text style={styles.cardAmount}>
-                    ${item.current_price.toFixed(2)}
-                  </Text>
-                </View>*/}
 
               </Link>
             </View>
@@ -182,6 +169,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ffffff",
     marginBottom: 5,
+    fontWeight:"bold",
+    textAlign:"center",
     marginHorizontal:20,
   },
   cardAmount: {
