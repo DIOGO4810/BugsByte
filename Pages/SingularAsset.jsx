@@ -84,19 +84,6 @@ const SingularAsset = () => {
         </View>
       </View>
 
-      {/* 
-                  <View style={styles.arrowContainer}>
-                    <Ionicons
-                      name={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "arrow-up" : "arrow-down"}
-                      size={24}
-                      color={data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red"}
-                    />
-                    <Text style={[styles.percentage, { color: data[search_id(data,item.name)].price_change_percentage_24h >= 0 ? "green" : "red" }]}>
-                      {data[search_id(data,item.name)].price_change_percentage_24h}%
-                    </Text>
-                  </View>
-      */}
-
         {/* Exibe a previsão de Gemini */}
         <View style={styles.caixaPrevisao}>
           <Text style={styles.textoPrevisao}>{previsaoGemini}</Text>
