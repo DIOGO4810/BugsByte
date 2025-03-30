@@ -13,7 +13,7 @@ const port = 5000; // You can use any available port number
 app.use(cors()); // Enable Cross-Origin Resource Sharing if you need it
 app.use(express.json()); // To parse JSON payloads
 
-const data = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
+let data = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
 const prediction = [];
 
 
@@ -32,20 +32,19 @@ app.get('/predict/:coin', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-app.get('/12primeiros',async (req,res) => {
+app.get('/info', async (req,res) => {
     try {
-        const a = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur')
-        const arr = []
-        for(let i=0;i<12;i++) {
-            arr[i] = a[i];
-        }
-        res.json(arr);
+        // const { coin } = req.params;  // Get 'coin' from the URL   /
+        const aux = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur')
+        if(aux.ok) data = await aux.json();
+        res.json(data)
     } catch (err) {
         console.error('Error occurred while fetching prediction:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 })
+
+
 
 //   app.get('/predict/tether', async (req, res) => {
 //     try {

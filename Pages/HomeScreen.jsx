@@ -58,6 +58,7 @@ const HomeScreen = () => {
     );
   }
 
+
   // Função para verificar se o link está ativo
   const isActive = (path) => location.pathname === path;
 
@@ -90,7 +91,7 @@ const HomeScreen = () => {
          <Image source={require('../assets/crytpo.jpeg')} style={{marginVertical:10, width: "80%", height: "100%", borderRadius:10, alignSelf:"center" }} />
 
           {baskets.map((item) => (
-            <View key={item.id} style={styles.row}>
+            <View key={item.index} style={styles.row}>
 
               <Link style={styles.card} to={{
                 pathname: `/basketPage/${item.name}/${item.index}`,
