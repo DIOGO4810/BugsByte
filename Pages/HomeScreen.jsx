@@ -44,7 +44,7 @@ const HomeScreen = () => {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando...</Text>
+        <Text style={styles.loadingText}>Esperando por mais API Keys do CoinGecko</Text>;
       </View>
     );
   }
