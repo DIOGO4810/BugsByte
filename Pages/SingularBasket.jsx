@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Link, useParams} from "react-router-native"; 
 import { Api, search_id } from '../API.js';
 import { previsto_price_basket } from "../Baskets.js";
+import LoadingPage from "./LoadingPage.jsx";
 
 
 
@@ -14,13 +15,12 @@ const baskets=[
                 {name:'ripple', value: 9.08},
                 {name:'stellar', value: 1.31},
                 {name:'uniswap', value: 0.72},
-                {name:'tron', value: 1.76},
+                {name:'tron', value: 13.16},
                 {name:'litecoin', value: 1.58},
                 {name: 'binancecoin', value: 7.24},
                 {name:'solana', value: 5.07},
                 {name: 'dogecoin', value: 2.02},
                 {name: 'cardano' , value: 1.86},
-                {name:'tron', value: 11.4},
               ],
   
           [      {name:'bitcoin', value: 77.4},
@@ -43,7 +43,7 @@ const baskets=[
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 const SingularBasket = () => {
-
+  const [predicto,setPredict] = useState(null);
   const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -66,6 +66,8 @@ const SingularBasket = () => {
           const result = await Api(
             "http://10.14.0.130:5000/info"
           );
+          const r = await previsto_price_basket(baskets[index],baskets[index].length)
+          setPredict(r);
           setData(result);
           setLoading(false); // Atualizando o estado de carregamento
         } catch (err) {
@@ -79,7 +81,7 @@ const SingularBasket = () => {
     }, []); // O array vazio significa que isso será executado apenas uma vez
   
    if (loading) {
-       return <Text style={styles.loadingText}>Carregando...</Text>;
+       return <LoadingPage/>;
      }
   
     if (error) {
@@ -144,7 +146,7 @@ const SingularBasket = () => {
   const totalMarketCap = data.reduce((sum, coin) => sum + coin.market_cap, 0);
 
   const marketDominance = (basket.reduce((sum,item) => {
-  const coinData=data[search_id(item.name)];
+  const coinData=data[search_id(data,item.name)];
   if (coinData) {
     return sum + coinData.market_cap;
    
@@ -153,7 +155,7 @@ const SingularBasket = () => {
 
 
   const totalVolatility =( basket.reduce((sum, item) => {
-    const coinData = data[search_id(item.name)];
+    const coinData = data[search_id(data,item.name)];
     if (coinData) {
       const media=(coinData.high_24h+coinData.low_24h)/2;
       return sum + ((coinData.high_24h-coinData.low_24h)/ media) * (item.value/100);
@@ -165,7 +167,7 @@ const SingularBasket = () => {
 
   const weightedPriceChange = (
     basket.reduce((sum, item) => {
-      const coinData = data[search_id(item.name)];
+      const coinData = data[search_id(data,item.name)];
       if (coinData) {
         return sum + (coinData.price_change_percentage_24h * (item.value/100));
       }
@@ -176,7 +178,7 @@ const SingularBasket = () => {
 
   const price=(
     basket.reduce((sum, item) => {
-      const coinData = data[search_id(item.name)];
+      const coinData = data[search_id(data,item.name)];
       if (coinData) {
         return sum + (coinData.current_price* (item.value/100));
       }
@@ -296,7 +298,7 @@ const SingularBasket = () => {
                  </TouchableOpacity>
                    
                    <View style={styles.statsContainer}>
-                      <Text style={{color:'white'}}>{previsto_price_basket(basket[index])}</Text>
+                      <Text style={{color:'white'}}>{predicto}</Text>
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 20 }}>
                     <View style={styles.noticiasContainer}>
