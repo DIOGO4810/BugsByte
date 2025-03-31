@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,9 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import { createArrayObj, totalget, teste, Api, search_id } from "../API.js";
+import {Api} from "../API.js";
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
+import LoadingPage from "./LoadingPage.jsx";
 
 const AssetsScreen = () => {
   const location = useLocation(); // Usando o hook para obter a localização atual
@@ -24,7 +25,7 @@ const AssetsScreen = () => {
     const fetchDataFromAPI = async () => {
       try {
         const result = await Api(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur"
+          "http://10.14.0.130:5000/info"
         );
         setData(result.slice(0, 10));
         setLoading(false); // Atualizando o estado de carregamento
@@ -40,10 +41,7 @@ const AssetsScreen = () => {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Carregando...</Text>
-      </View>
+      <LoadingPage/>
     );
   }
 
