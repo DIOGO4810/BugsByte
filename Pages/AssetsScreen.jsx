@@ -3,10 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator,
   Image,
 } from "react-native";
 import {Api} from "../API.js";

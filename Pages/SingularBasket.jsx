@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Animated, Dimensions , Image} from "react-native";
 import { Ionicons } from '@expo/vector-icons'; // Ícones para as setas
 import Icon from 'react-native-vector-icons/MaterialIcons';

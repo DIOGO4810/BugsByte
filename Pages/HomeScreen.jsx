@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator,
   Image,
 } from "react-native";
-import { createArrayObj, totalget, teste, Api, search_id } from "../API.js";
 import { Link, useLocation } from "react-router-native"; // Importando Link para navegação
 
 const baskets=[ {name:"Basket de Criptomoedas mais estáveis", index:0}, {name: "Basket de Criptomoedas menos estáveis",index:1}]

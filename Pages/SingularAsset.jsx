@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-native";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { Link } from "react-router-native";
-import { predict } from "../Prediction.js"; // Assuming predict is imported correctly
 import Ionicons from "react-native-vector-icons/Ionicons"; // Importando Ionicons
 import GeminiCall from "../AI_api.js";
 import { Api, search_id } from "../API.js";
+import LoadingPage from "./LoadingPage.jsx";
 
 const SingularAsset = () => {
   const [predicts, setPredicts] = useState(null); // Store prediction value
@@ -48,7 +48,7 @@ const SingularAsset = () => {
   }, [name]); // Re-fetch data when name changes
 
   if (loading) {
-    return <Text style={styles.loadingText}>Esperando por mais API Keys do CoinGecko</Text>;
+    return <LoadingPage/>;
   }
 
   if (error) {
