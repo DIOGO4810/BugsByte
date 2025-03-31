@@ -14,6 +14,9 @@
     "@tensorflow/tfjs": "^4.22.0",
     "apify": "^3.3.2",
     "cors": "^2.8.5",
+    "d3-color": "^3.1.0",
+    "d3-interpolate": "^3.0.1",
+    "d3-scale": "^4.0.2",
     "expo": "~52.0.41",
     "expo-status-bar": "~2.0.1",
     "express": "^4.21.2",
@@ -21,6 +24,7 @@
     "react-native": "0.76.7",
     "react-native-svg-charts": "^5.4.0",
     "react-router-native": "^6.30.0",
+    "tough-cookie": "^5.1.2",
     "twit": "^2.2.11"
   },
   "devDependencies": {

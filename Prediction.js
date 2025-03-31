@@ -1,7 +1,6 @@
 import tf from '@tensorflow/tfjs';
 import {Api} from './API.js';
 
-import axios from 'axios';
 
 
 
