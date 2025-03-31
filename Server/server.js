@@ -10,7 +10,7 @@ const port = 5000; // You can use any available port number
 
 
 // Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing if you need it
+app.use(cors()); 
 app.use(express.json()); // To parse JSON payloads
 
 let data = await Api('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur');
@@ -46,100 +46,6 @@ app.get('/info', async (req,res) => {
 
 
 
-//   app.get('/predict/tether', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('tether');
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });    
-
-//   app.get('/predict/ripple', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('ripple');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
-
-//   app.get('/predict/binancecoin', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('binancecoin');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
-
-//   app.get('/predict/solana', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('solana');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
-//   app.get('/predict/usd-coin', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('usd-coin');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
-
-//   app.get('/predict/dogecoin', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('dogecoin');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
-
-//   app.get('/predict/cardamg', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('cardamg');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   }); 
-
-//   app.get('/predict/tron', async (req, res) => {
-//     try {
-//       // Assuming 'predict' is an async function, and you need to await its result
-//       const prediction = await predict('tron');    // Call the async prediction function
-//       // Send a response with prediction data
-//       res.json({ resultado: prediction});
-//     } catch (err) {  
-//       console.error('Error occurred while fetching prediction:', err);
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
-//   });  
 
 // Start the server
 app.listen(port, () => {
