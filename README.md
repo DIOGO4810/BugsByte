@@ -14,3 +14,4 @@ O tema escolhido pela nossa equipa foi um *predictor* de preços para *assets* e
 * [Bruno Carvalho](https://github.com/2004bdlc)
 * [Carolina Martins](https://github.com/Carolllina)
 * [Diogo Ribeiro](https://github.com/DIOGO4810)
+* [Lucas Robertson](https://github.com/lucasxdsy)
